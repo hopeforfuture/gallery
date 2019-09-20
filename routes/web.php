@@ -19,6 +19,7 @@ Route::get('/', 'Auth\UserLoginController@showLoginForm')->name('user.login');
 Route::post('/', 'Auth\UserLoginController@dologin')->name('user.login.submit');
 Route::get('/logout', 'Auth\UserLoginController@logout')->name('user.logout');
 Route::get('/signup', 'Auth\UserLoginController@signup')->name('user.signup');
+Route::post('/signup', 'Auth\UserLoginController@signupprocess')->name('user.signup.submit');
 Route::get('/dashboard', 'HomeController@dashboard')->name('user.dashboard');
 
 Route::prefix('admin')->group(function() {

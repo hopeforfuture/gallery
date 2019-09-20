@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use Hash;
+use Session;
+use App\User;
 
 class UserLoginController extends Controller
 {
     public function __construct()
     {
       $this->middleware('guest')->except('logout');
-	  $this->middleware('auth')->except('showLoginForm', 'dologin', 'signup');
+	  $this->middleware('auth')->except('showLoginForm', 'dologin', 'signup', 'signupprocess');
     }
 	
 	public function showLoginForm()
@@ -39,8 +42,34 @@ class UserLoginController extends Controller
 	
 	public function signup()
 	{
-		echo 'Signup Page';
-		die;
+		//echo 'Signup Page<br/>';
+		//echo Hash::make('test123');
+		//die;
+		return view('auth.user-signup');
+	}
+	
+	public function signupprocess(Request $request)
+	{
+		$this->validate($request, [
+			'name'=>'required',
+			'email'=>'required|email|unique:users',
+			'password'=>'required|confirmed|min:6',
+			'CaptchaCode'=>'required|valid_captcha'
+		]);
+		
+		$postdata = $request->only('name', 'email', 'password');
+		$postdata['password'] = Hash::make($postdata['password']);
+		$user = new User($postdata);
+		$user->save();
+		
+		$credentials = $request->only('email', 'password');
+		
+		if(Auth()->attempt($credentials))
+		{
+			Session::flash('success_msg', 'Signup process is successful.');
+			return redirect()->route('user.dashboard');
+		}
+		
 	}
 	
 	public function logout()

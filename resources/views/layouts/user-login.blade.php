@@ -21,7 +21,8 @@
 
     <body>
 		<div class="header">
-			<a href="{{ route('user.signup')}}" class="label label-primary pull-right">Sign Up</a>
+			<a href="Javascript:void(0)" class="label label-primary pull-right">Home</a>&nbsp;
+			<a href="{{ route('user.signup') }}" class="label label-primary pull-right">Sign Up</a>
 		</div>
         <div class="container-fluid">
             @yield('content')
