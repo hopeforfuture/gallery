@@ -22,6 +22,10 @@
     <body>
 		<div class="header">
 			<a href="{{ route('user.logout')}}" class="label label-primary pull-right">Logout</a>
+			<a href="{{ route('user.reset.password')}}" class="label label-primary pull-right">Change Password</a>
+		</div>
+		<div class="sidebar">
+			<li><a href="{{ route('category.index') }}">Manage Category</a></li>
 		</div>
         <div class="container-fluid">
             @yield('content')

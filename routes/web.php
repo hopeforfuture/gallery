@@ -21,6 +21,17 @@ Route::get('/logout', 'Auth\UserLoginController@logout')->name('user.logout');
 Route::get('/signup', 'Auth\UserLoginController@signup')->name('user.signup');
 Route::post('/signup', 'Auth\UserLoginController@signupprocess')->name('user.signup.submit');
 Route::get('/dashboard', 'HomeController@dashboard')->name('user.dashboard');
+Route::get('/reset/password', 'Auth\UserLoginController@resetpassword')->name('user.reset.password');
+Route::post('/reset/password', 'Auth\UserLoginController@resetpasswordprocess')->name('user.reset.password.submit');
+
+Route::prefix('album')->group(function() {
+	Route::get('/list', 'AlbumController@index')->name('album.index');
+	Route::get('/create', 'AlbumController@create')->name('album.create');
+	Route::post('/insert', 'AlbumController@store')->name('album.insert');
+	Route::get('/edit/{id}', 'AlbumController@edit')->name('album.edit');
+	Route::post('/update/{id}', 'AlbumController@update')->name('album.update');
+	Route::get('/remove/{id}', 'AlbumController@remove')->name('album.delete');
+});
 
 Route::prefix('admin')->group(function() {
 	Route::get('/', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');

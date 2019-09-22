@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
 use Auth;
 use Hash;
 use Session;
-use App\User;
+
 
 class UserLoginController extends Controller
 {
     public function __construct()
     {
-      $this->middleware('guest')->except('logout');
+      $this->middleware('guest')->except('logout', 'resetpassword', 'resetpasswordprocess');
 	  $this->middleware('auth')->except('showLoginForm', 'dologin', 'signup', 'signupprocess');
     }
 	
@@ -70,6 +71,42 @@ class UserLoginController extends Controller
 			return redirect()->route('user.dashboard');
 		}
 		
+	}
+	
+	public function resetpassword()
+	{
+		return view('auth.user-reset-password');
+	}
+	
+	public function resetpasswordprocess(Request $request)
+	{
+		$this->validate($request, [
+			'old_password'=>'required|min:6',
+			'password'=>'required|confirmed|min:6',
+			'CaptchaCode'=>'required|valid_captcha'
+		]);
+		
+		$user = auth()->user();
+		$postdata = $request->only('password', 'old_password');
+		$old_password = $postdata['old_password'];
+		$new_password = $postdata['password'];
+		$userinfo = User::find($user->id);
+		
+		if(!(Hash::check($old_password, $userinfo->password)))
+		{
+			return redirect()->back()->with('status', 'current password does not match.');
+		}
+		elseif(strcmp($old_password, $new_password) == 0)
+		{
+			return redirect()->back()->with('status', 'New password could not be same as old password.');
+		}
+		
+		$updatedinfo = $request->only('password');
+		$updatedinfo['password'] = Hash::make($updatedinfo['password']);
+		
+		User::find($user->id)->update($updatedinfo);
+		Session::flash('success_msg', 'Password updated successfully.');
+		return redirect()->route('user.dashboard');
 	}
 	
 	public function logout()
