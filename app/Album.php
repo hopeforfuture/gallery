@@ -9,7 +9,7 @@ class Album extends Model
     protected $table = 'albums';
 	
 	protected $fillable = [
-        'album_name', 'album_description', 'album_cover', 'user_id', 'category_id', 'is_active'
+        'album_name', 'album_description', 'album_cover', 'user_id', 'category_id', 'download_count', 'is_active'
     ];
 	
 	const CREATED_AT = 'created_at';

@@ -25,7 +25,7 @@
 			<a href="{{ route('user.reset.password')}}" class="label label-primary pull-right">Change Password</a>
 		</div>
 		<div class="sidebar">
-			<li><a href="{{ route('category.index') }}">Manage Category</a></li>
+			<li><a href="{{ route('album.index') }}">Manage Album</a></li>
 		</div>
         <div class="container-fluid">
             @yield('content')

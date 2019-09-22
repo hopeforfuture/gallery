@@ -36,4 +36,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+	
+	public function album()
+	{
+		return $this->hasMany('App\Album', 'user_id');
+	}
 }
