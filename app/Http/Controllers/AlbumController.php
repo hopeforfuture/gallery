@@ -78,7 +78,9 @@ class AlbumController extends Controller
 				$constraint->aspectRatio();
 			})->save($destinationPath_thumb.$filename);
 			
-			$img->save($destinationPath.$filename);
+			//$img->save($destinationPath.$filename);
+			
+			$file->move($destinationPath,$filename);
 			
 			$album->album_cover = $filename;
 		}
@@ -136,7 +138,9 @@ class AlbumController extends Controller
 				$constraint->aspectRatio();
 			})->save($destinationPath_thumb.$filename);
 			
-			$img->save($destinationPath.$filename);
+			//$img->save($destinationPath.$filename);
+			
+			$file->move($destinationPath,$filename);
 			
 			$postdata['album_cover'] = $filename;
 			
