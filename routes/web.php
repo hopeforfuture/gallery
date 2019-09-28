@@ -33,6 +33,7 @@ Route::prefix('album')->group(function() {
 	Route::get('/remove/{id}', 'AlbumController@remove')->name('album.delete');
 	Route::get('/upload/{id}', 'PhotoController@upload')->name('album.upload');
 	Route::post('/upload/{id}', 'PhotoController@saveimages')->name('album.upload.submit');
+	Route::get('/view/images/{id}', 'PhotoController@viewlist')->name('album.view.list');
 });
 
 Route::prefix('admin')->group(function() {

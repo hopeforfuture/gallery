@@ -68,6 +68,7 @@
                             <td>
                                <a href="{{ route('album.edit', base64_encode($album->id)) }}" class="label label-warning">Edit</a>
                                <a href="{{ route('album.upload', base64_encode($album->id)) }}" class="label label-info">Upload Images</a>
+                               <a href="{{ route('album.view.list', base64_encode($album->id)) }}" class="label label-info">View Images</a>
                                 <a href="{{ route('album.delete', base64_encode($album->id)) }}" class="label label-danger" onclick="return confirm('Are you sure to delete?')">Delete</a> 
                             </td>
                         </tr>

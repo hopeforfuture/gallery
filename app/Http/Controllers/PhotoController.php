@@ -60,8 +60,8 @@ class PhotoController extends Controller
 		$this->validate($request, [
 		
 			'title.*'=> 'required',
-			'images.*'=> 'required',
-			'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+			'images'=> 'required',
+			'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
 			'CaptchaCode' => 'required|valid_captcha'
 		]);
 		$album_id = base64_decode($album_id);
@@ -96,7 +96,31 @@ class PhotoController extends Controller
             }
         }
 		
-		echo "Images uploaded successfully.";
-		die;
+		
+		Session::flash('success_msg', 'Photos uploaded successfully.');
+		return redirect()->route('album.view.list',base64_encode($album_id));
+	}
+	
+	public function viewlist($album_id, Request $request)
+	{
+		$album_id = base64_decode($album_id);
+		
+		if(!$this->isAlbumORPhotoAuthenticate(['album_id'=>$album_id]))
+		{
+			Session::flash('success_msg', 'Not an authorized user to view this album.');
+			return redirect()->route('album.index');
+		}
+		
+		$user = auth()->user();
+		
+		$photos = Photo::where([
+			   ['is_active', '=', '1'],
+			   ['album_id', '=', $album_id]
+			])->orderBy('id', 'DESC')->paginate(10);
+			
+		return view('photos.index',['photos'=>$photos, 'album_id'=>base64_encode($album_id)])
+            ->with('i', ($request->input('page', 1) - 1) * 10);
+		
+		
 	}
 }

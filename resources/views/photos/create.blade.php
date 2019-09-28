@@ -85,6 +85,7 @@ $(document).ready(function(){
 		var $tr = $(this).closest('.tr_clone');
 		var $clone = $tr.clone();         
 		$clone.find('input').val(''); 
+		$clone.find('.imgstatus').hide(); 
 		$tr.after($clone);
 	});
 	
