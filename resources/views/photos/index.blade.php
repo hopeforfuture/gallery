@@ -45,7 +45,12 @@
 								<div>{{$photo->title}}</div>
                             </td>
 							<td class="table-text">
-                                <div><img src='{{ asset("uploads/photos/thumb/$photo->photo_name")}}' /></div>
+                                <div>
+									<a href='{{ asset("uploads/photos/large/$photo->photo_name")}}' data-lightbox="{{$photo->album->album_name}}">
+										<img src='{{ asset("uploads/photos/thumb/$photo->photo_name")}}' />
+									</a>
+									
+								</div>
                             </td>
 							
                             <td class="table-text">
@@ -69,6 +74,7 @@
     @endif
     </div>
 </div>
+<script src="{{ URL::asset('js/lightbox.js') }}"></script>
 <script>
 	$("body").on("click", ".long-link", function(){
 		$(this).closest("td").find("div.short-str").hide();

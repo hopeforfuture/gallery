@@ -5,6 +5,7 @@
 
         <!-- bootstrap minified css -->
         <link rel="stylesheet" href="{{ URL::asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('css/lightbox.css') }}">
 		<link href="{{ captcha_layout_stylesheet_url() }}" type="text/css" rel="stylesheet">
         <!-- jQuery library -->
         <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
