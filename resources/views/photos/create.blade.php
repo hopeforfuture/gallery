@@ -150,7 +150,6 @@ $(document).ready(function(){
 			}
 			$("#imgpubpri").val(photo_types.join(','));
 			$(this).closest('.tr_clone').remove(); 
-			alert($("#imgpubpri").val());
 		}       
 	});
 	
@@ -188,8 +187,6 @@ $(document).ready(function(){
 		});
 		
 		$("#imgpubpri").val(photo_types.join(','));
-		
-		//alert($("#imgpubpri").val());
 	});
 	
 });
