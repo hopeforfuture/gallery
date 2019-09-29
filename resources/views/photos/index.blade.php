@@ -27,6 +27,7 @@
                         <th>Album Name</th>
                         <th>Photo Title</th>
 						<th>Photo</th>
+						<th>Status</th>
                         <th>Created</th>
                         <th>Action</th>
                     </thead>
@@ -43,6 +44,15 @@
                             </td>
                             <td class="table-text">
 								<div>{{$photo->title}}</div>
+                            </td>
+							<td class="table-text">
+								<div>
+									@if($photo->photo_status == '1')
+										Public
+									@else
+										Private
+									@endif
+								</div>
                             </td>
 							<td class="table-text">
                                 <div>

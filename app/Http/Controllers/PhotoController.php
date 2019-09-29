@@ -64,10 +64,18 @@ class PhotoController extends Controller
 			'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
 			'CaptchaCode' => 'required|valid_captcha'
 		]);
+		
 		$album_id = base64_decode($album_id);
 		$data = array();
 		$postdata = $request->input('title');
+		$photostatusarr = $request->only('imgpubpri');
+		
+		$photostatusarr = explode(",", $photostatusarr['imgpubpri'][0]);
 		$title = current($postdata);
+		$statusinfo = current($photostatusarr);
+		$statusarr = explode("@", $statusinfo);
+		
+		
 		$destinationPath = public_path().'/uploads/photos/large/' ;
 		$destinationPath_thumb = public_path().'/uploads/photos/thumb/' ;
 		
@@ -86,13 +94,15 @@ class PhotoController extends Controller
 				
 				$file->move($destinationPath,$filename);
 				
-				$data = array('album_id'=>$album_id, 'title'=>$title, 'photo_name'=>$filename);
+				$photo_status = ($statusarr[1] == "true") ? '1' : '0';
 				
+				$data = array('album_id'=>$album_id, 'title'=>$title, 'photo_name'=>$filename, 'photo_status'=>$photo_status);
 				$photo = new Photo($data);
-				
 				$photo->save();
 				
 				$title = next($postdata);
+				$statusinfo = next($photostatusarr);
+				$statusarr = explode("@", $statusinfo);
             }
         }
 		

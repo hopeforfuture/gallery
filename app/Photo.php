@@ -9,7 +9,7 @@ class Photo extends Model
     protected $table = 'photos';
 	
 	protected $fillable = [
-        'album_id', 'title', 'photo_name', 'is_active'
+        'album_id', 'title', 'photo_name', 'is_active', 'photo_status'
     ];
 	
 	const CREATED_AT = 'created_at';
