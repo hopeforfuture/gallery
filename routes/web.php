@@ -37,6 +37,7 @@ Route::prefix('album')->group(function() {
 	Route::get('/image/edit/{id}', 'PhotoController@edit')->name('album.photo.edit');
 	Route::post('/image/update/{id}', 'PhotoController@update')->name('album.photo.update');
 	Route::get('/image/delete/{id}', 'PhotoController@remove')->name('album.photo.delete');
+	Route::get('/download/{id}', 'AlbumController@download')->name('album.download');
 });
 
 Route::prefix('admin')->group(function() {

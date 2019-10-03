@@ -195,4 +195,6 @@ class PhotoController extends Controller
 		Session::flash('success_msg', 'Photo deleted successfully.');
 		return redirect()->route('album.view.list', base64_encode($photoinfo->album->id));
 	}
+	
+	
 }

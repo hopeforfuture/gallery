@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Album;
+use App\Photo;
 use Image;
 use Session;
+use ZipArchive;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 class AlbumController extends Controller
 {
@@ -172,5 +176,99 @@ class AlbumController extends Controller
 		
 		Session::flash('success_msg', 'Album deleted successfully.');
 		return redirect()->route('album.index');
+	}
+	
+	public function download($album_id)
+	{
+		$album_decoded_id = base64_decode($album_id);
+		
+		$photos = Photo::where([
+			   ['is_active', '=', '1'],
+			   ['album_id', '=', $album_decoded_id]
+			])->orderBy('id', 'DESC')->get();
+			
+		$album_info = Album::find($album_decoded_id);
+		
+		$user = auth()->user();
+			
+		$dirsrc = public_path().'/uploads/photos/large/';
+		
+		$dirtmp = public_path().'/uploads/';
+		
+		$album_name = str_replace(' ','-',$album_info->album_name);
+		
+		$fname = strtolower(strstr($user->name,' ', true));
+		
+		$dir_to_be_created = $album_name.'-'.$fname.'-'.time();
+			
+		$photoslist = array();
+		
+		$filesrc = '';
+		$filedest = '';
+		$zipfile = $dir_to_be_created.'.'.'zip';
+			
+		if(!empty($photos))
+		{
+			mkdir($dirtmp.$dir_to_be_created);
+			
+			foreach($photos as $photo)
+			{
+				$filesrc = $dirsrc.$photo->photo_name;
+				$filedest = $dirtmp.$dir_to_be_created.'/'.$photo->photo_name;
+				if(file_exists($filesrc))
+				{
+					copy($filesrc,$filedest);
+					$photoslist[] = $photo->photo_name;
+				}
+			}
+			
+			if(empty($photoslist))
+			{
+				rmdir($dirtmp.$dir_to_be_created);
+				Session::flash('success_msg', 'Sorry, album is empty, could not be downloaded.');
+				return redirect()->route('album.index');
+			}
+			
+			
+			$rootPath = realpath($dirtmp.$dir_to_be_created);
+			$zip = new ZipArchive();
+			$zip->open($zipfile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+			
+			$files = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($rootPath),
+				RecursiveIteratorIterator::LEAVES_ONLY
+			);
+			
+			foreach ($files as $name => $file)
+			{
+				// Skip directories (they would be added automatically)
+				if (!$file->isDir())
+				{
+					// Get real and relative path for current file
+					$filePath = $file->getRealPath();
+					$relativePath = substr($filePath, strlen($rootPath) + 1);
+
+					// Add current file to archive
+					$zip->addFile($filePath, $relativePath);
+				}
+			}
+			
+			// Zip archive will be created only after closing object
+			$zip->close();
+			//Remove the temporary created directory
+			foreach($photos as $photo)
+			{
+				$tmpfile = $dirtmp.$dir_to_be_created.'/'.$photo->photo_name;
+				if(file_exists($tmpfile))
+				{
+					@unlink($tmpfile);
+				}
+			}
+			rmdir($dirtmp.$dir_to_be_created);
+			//Download the zip file
+			return response()->download($zipfile);
+		}
+		
+		
 	}
 }
