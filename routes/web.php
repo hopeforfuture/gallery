@@ -34,6 +34,9 @@ Route::prefix('album')->group(function() {
 	Route::get('/upload/{id}', 'PhotoController@upload')->name('album.upload');
 	Route::post('/upload/{id}', 'PhotoController@saveimages')->name('album.upload.submit');
 	Route::get('/view/images/{id}', 'PhotoController@viewlist')->name('album.view.list');
+	Route::get('/image/edit/{id}', 'PhotoController@edit')->name('album.photo.edit');
+	Route::post('/image/update/{id}', 'PhotoController@update')->name('album.photo.update');
+	Route::get('/image/delete/{id}', 'PhotoController@remove')->name('album.photo.delete');
 });
 
 Route::prefix('admin')->group(function() {

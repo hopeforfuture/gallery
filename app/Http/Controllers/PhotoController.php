@@ -133,4 +133,66 @@ class PhotoController extends Controller
 		
 		
 	}
+	
+	public function edit($photo_id)
+	{
+		$photo_decoded_id = base64_decode($photo_id);
+		
+		if(!$this->isAlbumORPhotoAuthenticate(['photo_id'=>$photo_decoded_id]))
+		{
+			Session::flash('success_msg', 'Not an authorized user to view this photo.');
+			return redirect()->route('album.index');
+		}
+		
+		$photo = Photo::find($photo_decoded_id);
+		
+		return view('photos.edit', ['photo'=>$photo]);
+	}
+	
+	public function update($photo_id, Request $request)
+	{
+		$this->validate($request, [
+		
+			'title'=> 'required',
+			'photo_status'=>'required',
+			'CaptchaCode' => 'required|valid_captcha'
+		]);
+		
+		$photo_decoded_id = base64_decode($photo_id);
+		
+		$photoinfo = Photo::find($photo_decoded_id);
+		
+		$postdata = $request->input();
+		
+		Photo::find($photo_decoded_id)->update($postdata);
+		Session::flash('success_msg', 'Photo updated successfully.');
+		return redirect()->route('album.view.list', base64_encode($photoinfo->album->id));
+	}
+	
+	public function remove($photo_id)
+	{
+		$photo_decoded_id = base64_decode($photo_id);
+		
+		$photoinfo = Photo::find($photo_decoded_id);
+		
+		if(!$this->isAlbumORPhotoAuthenticate(['photo_id'=>$photo_decoded_id]))
+		{
+			Session::flash('success_msg', 'Not an authorized user to delete this photo.');
+			return redirect()->route('album.index');
+		}
+		
+		$destinationPath = public_path().'/uploads/photos/large/' ;
+		$destinationPath_thumb = public_path().'/uploads/photos/thumb/' ;
+		
+		$photo_large_src = $destinationPath.$photoinfo->photo_name;
+		$photo_thumb_src = $destinationPath_thumb.$photoinfo->photo_name;
+		
+		@unlink($photo_large_src);
+		@unlink($photo_thumb_src);
+		
+		Photo::find($photo_decoded_id)->delete();
+		
+		Session::flash('success_msg', 'Photo deleted successfully.');
+		return redirect()->route('album.view.list', base64_encode($photoinfo->album->id));
+	}
 }

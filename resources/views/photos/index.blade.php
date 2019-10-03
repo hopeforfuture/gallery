@@ -45,15 +45,7 @@
                             <td class="table-text">
 								<div>{{$photo->title}}</div>
                             </td>
-							<td class="table-text">
-								<div>
-									@if($photo->photo_status == '1')
-										Public
-									@else
-										Private
-									@endif
-								</div>
-                            </td>
+							
 							<td class="table-text">
                                 <div>
 									<a href='{{ asset("uploads/photos/large/$photo->photo_name")}}' data-lightbox="{{$photo->album->album_name}}">
@@ -63,12 +55,22 @@
 								</div>
                             </td>
 							
+							<td class="table-text">
+								<div>
+									@if($photo->photo_status == 1)
+										Public
+									@else
+										Private
+									@endif
+								</div>
+                            </td>
+							
                             <td class="table-text">
                                 <div>{{$photo->created_at}}</div>
                             </td>
                             <td>
-                               <a href="Javascript:void(0);" class="label label-warning">Edit</a>
-                                <a href="Javascript:void(0);" class="label label-danger" onclick="return confirm('Are you sure to delete?')">Delete</a> 
+                               <a href="{{ route('album.photo.edit', base64_encode($photo->id)) }}" class="label label-warning">Edit</a>
+                                <a href="{{ route('album.photo.delete', base64_encode($photo->id)) }}" class="label label-danger" onclick="return confirm('Are you sure to delete?')">Delete</a> 
                             </td>
                         </tr>
                     @endforeach
